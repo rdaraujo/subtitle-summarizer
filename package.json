@@ -1,0 +1,13 @@
+{
+  "name": "projeto-js",
+  "version": "1.0.0",
+  "description": "Projetinho do curso JavaScript Funcional e Reativo da Cod3r",
+  "main": "index.js",
+  "author": "Rafael Dantas",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "itertools": "^1.7.0",
+    "named-tuple": "^0.1.1"
+  }
+}
