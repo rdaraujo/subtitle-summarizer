@@ -105,7 +105,7 @@ export const funcoes = () => {
         for (const sub of res) {
           const [num, start_end, ...text] = sub;
           const [start, end] = start_end.split(" --> ");
-          subtitles.push(new Subtitle(num, start, end, text));
+          subtitles.push(new Subtitle(num.trim(), start.trim(), end.trim(), text));
         }
         resolve(subtitles);
       } catch (e) {
