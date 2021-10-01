@@ -2,11 +2,28 @@ import fs from "fs";
 import createNamedTuple from "named-tuple";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
+import { groupby } from "itertools";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const Subtitle = createNamedTuple("Subtitle", "num", "start", "end", "text");
+const SYMBOLS = [
+  ".",
+  "?",
+  "!",
+  "-",
+  ",",
+  '"',
+  "_",
+  "♪",
+  "<i>",
+  "</i>",
+  "\r",
+  "[",
+  "]",
+  "(",
+  ")",
+];
 
 export const funcoes = () => {
   const listFiles = (folder, ext) => {
@@ -40,7 +57,8 @@ export const funcoes = () => {
     });
   };
 
-  const subtitlerize = (lines) => {
+  const subtitlefy = (lines) => {
+    const Subtitle = createNamedTuple("Subtitle", "num","start", "end", "text");
     return new Promise((resolve, reject) => {
       try {
         const allLines = lines.values();
@@ -70,5 +88,51 @@ export const funcoes = () => {
     });
   };
 
-  return { listFiles, readFiles, subtitlerize };
+  const subtitlefyAlt = (lines) => {
+    const Subtitle = createNamedTuple("Subtitle", "num","start", "end", "text");
+    return new Promise((resolve, reject) => {
+      try {
+        const res = [];
+
+        for (const [chave, valor] of groupby(lines, (line) => Boolean(line.trim()))) {
+          if (chave) {
+            res.push(Array.from(valor));
+          }
+        }
+
+        const subtitles = [];
+
+        for (const sub of res) {
+          const [num, start_end, ...text] = sub;
+          const [start, end] = start_end.split(" --> ");
+          subtitles.push(new Subtitle(num, start, end, text));
+        }
+        resolve(subtitles);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  };
+
+  const removeSymbols = (subtitles) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const result = subtitles.map((subtitle) => {
+          const texts = subtitle.text.map((text) => {
+            let line = text;
+            SYMBOLS.forEach((simbolo) => {
+              line = line.split(simbolo).join("");
+            });
+            return line.trim();
+          });
+          return { ...subtitle, text: texts };
+        });
+        resolve(result);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  };
+
+  return { listFiles, readFiles, subtitlefy, subtitlefyAlt, removeSymbols };
 };
