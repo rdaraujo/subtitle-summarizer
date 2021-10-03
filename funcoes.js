@@ -134,5 +134,20 @@ export const funcoes = () => {
     });
   };
 
-  return { listFiles, readFiles, subtitlefy, subtitlefyAlt, removeSymbols };
+  const wordfy = (subtitles) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const allWords = [];
+        for (const subtitle of subtitles) {
+          const words = subtitle.text.map(line => line.split(' '))
+          allWords.push(...words)
+        }
+        resolve(allWords.flat());
+      } catch (e) {
+        reject(e);
+      }
+    });
+  };
+
+  return { listFiles, readFiles, subtitlefy, subtitlefyAlt, removeSymbols, wordfy };
 };
