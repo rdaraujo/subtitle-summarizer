@@ -149,5 +149,31 @@ export const funcoes = () => {
     });
   };
 
-  return { listFiles, readFiles, subtitlefy, subtitlefyAlt, removeSymbols, wordfy };
+  const count = (words) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const summary = words.reduce((words, word) => {
+          const el = word.toLowerCase();
+          const count = words[word] ? words[word].count + 1 : 1;
+          words[word] = { word: el, count };
+          return words;
+        }, {});
+        resolve(Object.values(summary));
+      } catch (e) {
+        reject(e);
+      }
+    });
+  };
+
+  const order = (array) => (attr) => {
+    return new Promise((resolve, reject) => {
+      try {
+        resolve(array.sort((a, b) => b[attr] - a[attr]));
+      } catch (e) {
+        reject(e);
+      }
+    });
+  };
+
+  return { listFiles, readFiles, subtitlefy, subtitlefyAlt, removeSymbols, wordfy, count, order };
 };
