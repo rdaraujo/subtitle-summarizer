@@ -152,10 +152,10 @@ export const funcoes = () => {
   const count = (words) => {
     return new Promise((resolve, reject) => {
       try {
-        const summary = words.reduce((words, word) => {
-          const el = word.toLowerCase();
+        const summary = words.reduce((words, el) => {
+          const word = el.toLowerCase();
           const count = words[word] ? words[word].count + 1 : 1;
-          words[word] = { word: el, count };
+          words[word] = { word, count };
           return words;
         }, {});
         resolve(Object.values(summary));
