@@ -19,5 +19,5 @@ listFiles("data", ".srt")
   .then((subtitles) => removeSymbols(subtitles))
   .then((subtitles) => wordfy(subtitles))
   .then((words) => count(words))
-  .then((words) => order(words)('count'))
+  .then((words) => order(words)("count"))
   .then(console.log);
